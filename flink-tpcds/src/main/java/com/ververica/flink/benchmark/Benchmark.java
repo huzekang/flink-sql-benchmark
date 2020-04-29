@@ -131,6 +131,13 @@ public class Benchmark {
 		System.err.println(builder.toString());
 	}
 
+	/**
+	 * 初始化TableEnvironment
+	 * @param hiveConf
+	 * @param database
+	 * @param parallelism
+	 * @return
+	 */
 	private static TableEnvironment setUpEnv(String hiveConf, String database, int parallelism) {
 		EnvironmentSettings settings = EnvironmentSettings.newInstance().useBlinkPlanner().inBatchMode().build();
 		TableEnvironment tEnv = TableEnvironment.create(settings);
@@ -148,6 +155,7 @@ public class Benchmark {
 
 		tEnv.getConfig().addConfiguration(GlobalConfiguration.loadConfiguration());
 
+		// 注册hive catalog
 		HiveCatalog catalog = new HiveCatalog("hive", database, hiveConf, HiveVersionInfo.getVersion());
 		tEnv.registerCatalog("hive", catalog);
 		tEnv.useCatalog("hive");
